@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#202327"/>
+      <stop offset="1" stop-color="#111315"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="760" fill="url(#g)"/>
+  <rect x="80" y="80" width="1440" height="600" rx="24" fill="none" stroke="#3d4248" stroke-width="3" stroke-dasharray="16 14"/>
+  <circle cx="340" cy="380" r="150" fill="#173f68" opacity=".65"/>
+  <path d="M240 430 C420 170, 550 610, 760 350 S1070 190, 1350 390" fill="none" stroke="#4aa3ff" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="1210" cy="315" r="42" fill="#4aa3ff"/>
+  <text x="800" y="650" text-anchor="middle" fill="#f5f7fa" font-family="Arial, sans-serif" font-size="40" font-weight="700">TEASER IMAGE / VIDEO PLACEHOLDER</text>
+  <text x="800" y="698" text-anchor="middle" fill="#9ba2aa" font-family="Arial, sans-serif" font-size="24">Replace assets/images/teaser-placeholder.svg</text>
+</svg>

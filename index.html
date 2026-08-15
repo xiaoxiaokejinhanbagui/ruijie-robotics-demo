@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personal robotics demos by 殷瑞杰 at Nanyang Technological University." />
+  <title>殷瑞杰 — Robotics Demos</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/main.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top">RUIJIE<span>ROBOTICS</span></a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#whole-body">Whole-Body Control</a>
+        <a href="#symmetry">GNN & Symmetry</a>
+        <a href="#next">Next</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="container narrow">
+        <p class="eyebrow">PERSONAL ROBOTICS DEMO COLLECTION</p>
+        <h1>殷瑞杰 <span class="accent">Whole-Body Robot Control</span></h1>
+        <p class="hero-subtitle">
+          Reinforcement-learning-based whole-body control, symmetry-aware graph
+          neural networks, and fine-grained control through upper/lower-body decoupling.
+        </p>
+        <div class="project-meta">
+          <span>Nanyang Technological University</span>
+          <span>Robotics · Reinforcement Learning · GNN</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="#whole-body">View Demos</a>
+          <a class="button" href="#symmetry">Current Work</a>
+          <a class="button" href="mailto:ruijie006@e.ntu.edu.sg">Email</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section compact">
+      <div class="container narrow">
+        <div class="section-heading">
+          <p class="eyebrow">ABOUT</p>
+          <h2>Research Focus</h2>
+        </div>
+        <p class="lead">
+          I am currently studying at Nanyang Technological University, with a
+          focus on reinforcement-learning-based whole-body robot control.
+        </p>
+        <p>
+          My current work explores symmetry-aware neural policies based on graph
+          neural networks (GNNs), together with upper/lower-body decoupling for
+          more fine-grained whole-body control. This page is a personal demo
+          collection and will be updated as the experiments progress.
+        </p>
+        <div class="highlight-grid">
+          <article class="stat-card"><span class="stat-value">RL</span><span class="stat-label">Whole-body control</span></article>
+          <article class="stat-card"><span class="stat-value">GNN</span><span class="stat-label">Symmetry-aware policies</span></article>
+          <article class="stat-card"><span class="stat-value">U/L</span><span class="stat-label">Decoupled fine-grained control</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="whole-body" class="section divider-top">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">DEMO SERIES 01</p>
+          <h2>Reinforcement-Learning-Based Whole-Body Control</h2>
+          <p>Multi-skill whole-body policies demonstrated in simulation and on the real robot.</p>
+        </div>
+
+        <div class="subsection-block first">
+          <div class="subsection-title">
+            <div><p class="eyebrow">01 · MULTI-SKILL CONTROL</p><h3>Policy Switching</h3></div>
+          </div>
+          <p class="experiment-description">
+            In simulation, one continuous video switches through
+            <strong>squatting</strong>, <strong>walking</strong>, and
+            <strong>reaching</strong>. On the real robot, the current switching
+            demo covers <strong>squatting</strong> and <strong>walking</strong>;
+            reaching is demonstrated independently below.
+          </p>
+
+          <div class="video-grid two-feature">
+            <article class="video-card ours">
+              <div class="video-shell">
+                <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/skill_switch_sim.jpg">
+                  <source src="assets/videos/whole_body/skill-switch-simulation.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-label-block"><strong>Simulation</strong><span>Squatting → Walking → Reaching</span></div>
+            </article>
+
+            <article class="video-card">
+              <div class="video-shell">
+                <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/skill_switch_real.jpg">
+                  <source src="assets/videos/whole_body/skill-switch-hardware.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-label-block"><strong>Real Robot</strong><span>Squatting ↔ Walking</span></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="subsection-block">
+          <div class="subsection-title">
+            <div><p class="eyebrow">02 · REACHING</p><h3>Independent Reaching Demo</h3></div>
+          </div>
+          <p class="experiment-description">
+            Reaching is shown as an independent policy in both simulation and
+            hardware. It is not part of the current real-robot switching sequence.
+          </p>
+          <div class="video-grid two-feature">
+            <article class="video-card">
+              <div class="video-shell">
+                <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/reaching_sim.jpg">
+                  <source src="assets/videos/whole_body/reaching-simulation.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-label-block"><strong>Simulation</strong><span>Reaching policy</span></div>
+            </article>
+
+            <article class="video-card ours">
+              <div class="video-shell">
+                <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/reaching_real.jpg">
+                  <source src="assets/videos/whole_body/reaching-hardware.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-label-block"><strong>Real Robot</strong><span>Reaching policy</span></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="symmetry" class="section divider-top">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">DEMO SERIES 02</p>
+          <h2>Symmetry-Aware GNN Control & Upper/Lower-Body Decoupling</h2>
+          <p>
+            Ongoing experiments combining a symmetry-aware GNN policy with
+            upper/lower-body decoupling for coordinated locomotion and manipulation.
+          </p>
+        </div>
+
+        <div class="subsection-block first">
+          <div class="subsection-title">
+            <div><p class="eyebrow">01 · BOX MANIPULATION</p><h3>Box Transfer in Simulation</h3></div>
+          </div>
+          <p class="experiment-description">
+            The robot approaches, grasps, carries, and transfers a box between
+            two support surfaces in simulation.
+          </p>
+          <article class="video-card feature-video ours">
+            <div class="video-shell feature-shell">
+              <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/box_transfer_sim.jpg">
+                <source src="assets/videos/gnn_symmetry/box-transfer-simulation.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-label-block"><strong>Simulation</strong><span>Box grasping, carrying and transfer</span></div>
+          </article>
+        </div>
+
+        <div class="subsection-block">
+          <div class="subsection-title">
+            <div><p class="eyebrow">02 · SYMMETRY DURING BOX CARRYING</p><h3>Left / Right Turning in One Video</h3></div>
+          </div>
+          <p class="experiment-description">
+            The left- and right-turning box-carrying behaviors are contained in
+            a single video. The <span class="trajectory blue-dot">blue</span>
+            and <span class="trajectory yellow-dot">yellow</span> points are the
+            trajectory visualizations shown inside that same sequence.
+          </p>
+          <article class="video-card feature-video ours">
+            <div class="video-shell feature-shell">
+              <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/box_turn_symmetry.jpg">
+                <source src="assets/videos/gnn_symmetry/box-turn-symmetry.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-label-block"><strong>Box-Carrying Turning</strong><span>Blue / yellow trajectories</span></div>
+          </article>
+        </div>
+
+        <div class="subsection-block">
+          <div class="subsection-title">
+            <div><p class="eyebrow">03 · SYMMETRIC TURNING</p><h3>Left / Right Circular Turning</h3></div>
+          </div>
+          <p class="experiment-description">
+            A continuous turning sequence traces both directions and forms a
+            mirrored two-loop trajectory, providing an additional qualitative
+            symmetry demonstration.
+          </p>
+          <article class="video-card feature-video">
+            <div class="video-shell feature-shell">
+              <video autoplay muted loop playsinline preload="metadata" poster="assets/images/posters/turning_symmetry.jpg">
+                <source src="assets/videos/gnn_symmetry/turning-symmetry.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-label-block"><strong>Symmetric Turning</strong><span>Left / right circular trajectory</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="next" class="section divider-top">
+      <div class="container narrow">
+        <div class="section-heading">
+          <p class="eyebrow">NEXT EXPERIMENTS</p>
+          <h2>Planned Additions</h2>
+          <p>These are separated from the completed demos above.</p>
+        </div>
+        <div class="roadmap-list">
+          <article class="roadmap-item">
+            <span class="roadmap-index">01</span>
+            <div><h3>GNN vs. MLP Symmetry Comparison</h3><p>Controlled comparison experiments for symmetry generalization.</p></div>
+            <span class="status-chip waiting">Planned</span>
+          </article>
+          <article class="roadmap-item">
+            <span class="roadmap-index">02</span>
+            <div><h3>Real-Robot Box Carrying</h3><p>Transfer the current simulation box-carrying behavior to hardware.</p></div>
+            <span class="status-chip waiting">Planned</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section divider-top">
+      <div class="container narrow">
+        <div class="contact-panel">
+          <p class="eyebrow">CONTACT</p>
+          <h2>殷瑞杰</h2>
+          <p>Nanyang Technological University<br />Reinforcement Learning · Whole-Body Robot Control · GNN</p>
+          <div class="hero-actions">
+            <a class="button primary" href="mailto:ruijie006@e.ntu.edu.sg">ruijie006@e.ntu.edu.sg</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>殷瑞杰 · Personal Robotics Demos</span>
+      <span>Ongoing demo collection</span>
+    </div>
+  </footer>
+</body>
+</html>
