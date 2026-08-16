@@ -51,50 +51,139 @@ document.addEventListener("DOMContentLoaded", () => {
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         const target = button.dataset.tab;
-
         buttons.forEach((btn) => btn.classList.toggle("active", btn === button));
-
-        document
-          .querySelectorAll(`[data-tab-panel="${groupName}"]`)
-          .forEach((panel) => {
-            panel.classList.toggle("active", panel.dataset.tab === target);
-          });
+        document.querySelectorAll(`[data-tab-panel="${groupName}"]`).forEach((panel) => {
+          panel.classList.toggle("active", panel.dataset.tab === target);
+        });
       });
     });
   });
 
   // -------------------------------------------------------------
-  // Native video controls
-  // Users can play/pause, drag the timeline, change volume,
-  // and use the browser's standard video controls.
+  // Always-visible custom video controls
   // -------------------------------------------------------------
+  const controlStyle = document.createElement("style");
+  controlStyle.textContent = `
+    .custom-video-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 7px 10px;
+      background: linear-gradient(180deg, rgba(7,10,13,.35), rgba(7,10,13,.94));
+      color: #eef3f8;
+      font: 600 12px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    .custom-video-controls button {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 5px;
+      background: rgba(14,18,23,.82);
+      color: #eef3f8;
+      min-width: 58px;
+      padding: 6px 9px;
+      cursor: pointer;
+      font: inherit;
+    }
+    .custom-video-controls button:hover {
+      border-color: #66a9ff;
+      color: #66a9ff;
+    }
+    .custom-video-controls input[type="range"] {
+      width: 100%;
+      min-width: 0;
+      accent-color: #66a9ff;
+      cursor: pointer;
+    }
+    .custom-video-time {
+      min-width: 86px;
+      text-align: right;
+      color: #c7ced7;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (max-width: 560px) {
+      .custom-video-controls {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+      .custom-video-time { display: none; }
+    }
+  `;
+  document.head.appendChild(controlStyle);
+
+  const formatTime = (seconds) => {
+    if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${mins}:${secs}`;
+  };
+
   document.querySelectorAll(".video-shell video").forEach((video) => {
-    video.controls = true;
-    video.preload = "metadata";
-    video.setAttribute("controls", "");
-
     const shell = video.closest(".video-shell");
+    if (!shell) return;
 
-    const showFallback = () => {
-      shell?.classList.add("video-missing");
+    video.controls = false;
+    video.removeAttribute("controls");
+    video.preload = "metadata";
+
+    const controls = document.createElement("div");
+    controls.className = "custom-video-controls";
+    controls.innerHTML = `
+      <button type="button" class="video-play-toggle">Pause</button>
+      <input class="video-seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Video progress" />
+      <span class="custom-video-time">0:00 / 0:00</span>
+    `;
+    shell.appendChild(controls);
+
+    const playButton = controls.querySelector(".video-play-toggle");
+    const seek = controls.querySelector(".video-seek");
+    const time = controls.querySelector(".custom-video-time");
+    let seeking = false;
+
+    const updateButton = () => {
+      playButton.textContent = video.paused ? "Play" : "Pause";
     };
 
-    const showVideo = () => {
-      shell?.classList.remove("video-missing");
+    const updateTime = () => {
+      const duration = Number.isFinite(video.duration) ? video.duration : 0;
+      if (!seeking && duration > 0) {
+        seek.value = String(Math.round((video.currentTime / duration) * 1000));
+      }
+      time.textContent = `${formatTime(video.currentTime)} / ${formatTime(duration)}`;
     };
 
+    playButton.addEventListener("click", () => {
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    });
+
+    seek.addEventListener("pointerdown", () => { seeking = true; });
+    seek.addEventListener("pointerup", () => { seeking = false; });
+    seek.addEventListener("input", () => {
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+      video.currentTime = (Number(seek.value) / 1000) * video.duration;
+      updateTime();
+    });
+
+    video.addEventListener("play", updateButton);
+    video.addEventListener("pause", updateButton);
+    video.addEventListener("loadedmetadata", updateTime);
+    video.addEventListener("durationchange", updateTime);
+    video.addEventListener("timeupdate", updateTime);
+
+    const showFallback = () => shell.classList.add("video-missing");
+    const showVideo = () => shell.classList.remove("video-missing");
     video.addEventListener("loadeddata", showVideo);
     video.addEventListener("error", showFallback);
+    if (video.error) showFallback();
 
-    if (video.error) {
-      showFallback();
-    }
-
-    window.setTimeout(() => {
-      if (video.readyState === 0) {
-        showFallback();
-      }
-    }, 900);
+    updateButton();
+    updateTime();
   });
 
   // -------------------------------------------------------------
@@ -123,44 +212,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // -------------------------------------------------------------
-  // Pause off-screen videos to reduce CPU/GPU usage while
-  // preserving manual pause/play choices made by the visitor.
+  // Pause off-screen videos only; do not force replay when they
+  // come back into view, so the visitor keeps control.
   // -------------------------------------------------------------
   if ("IntersectionObserver" in window) {
-    const autoPausing = new WeakSet();
-
-    document.querySelectorAll("video").forEach((video) => {
-      video.addEventListener("pause", () => {
-        if (autoPausing.has(video)) {
-          autoPausing.delete(video);
-          return;
-        }
-        video.dataset.userPaused = "true";
-      });
-
-      video.addEventListener("play", () => {
-        delete video.dataset.userPaused;
-      });
-    });
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
-
-          if (entry.isIntersecting) {
-            if (video.dataset.userPaused !== "true") {
-              video.play().catch(() => {});
-            }
-          } else if (!video.paused) {
-            autoPausing.add(video);
-            video.pause();
-          }
+          if (!entry.isIntersecting && !video.paused) video.pause();
         });
       },
       { threshold: 0.05 }
     );
-
     document.querySelectorAll("video").forEach((video) => observer.observe(video));
   }
 });
