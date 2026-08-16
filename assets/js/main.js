@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <span>B.Eng. in Automation, Sichuan University</span>
     `;
     role.style.display = "grid";
-    role.style.gap = "5px";
-    role.style.lineHeight = "1.5";
-    role.style.marginBottom = "22px";
+    role.style.gap = "3px";
+    role.style.lineHeight = "1.4";
+    role.style.marginBottom = "16px";
   }
 
   const portrait = document.querySelector(".portrait-wrap img");
@@ -40,6 +40,38 @@ document.addEventListener("DOMContentLoaded", () => {
       else item.appendChild(advisor);
     }
   });
+
+  // Keep the opening section compact and visually balanced with the portrait.
+  const heroStyle = document.createElement("style");
+  heroStyle.textContent = `
+    .hero { padding: 40px 0 30px; }
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 46px;
+      align-items: center;
+    }
+    .hero-copy h1 {
+      font-size: clamp(2.7rem, 5vw, 4rem);
+      line-height: .96;
+    }
+    .role { font-size: .96rem; }
+    .hero-rule { width: 36px; margin: 13px 0; }
+    .profile-links { margin-top: 15px; }
+    .portrait-wrap {
+      width: 250px;
+      justify-self: end;
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 210px; gap: 34px; }
+      .portrait-wrap { width: 210px; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 32px 0 26px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .portrait-wrap { width: 180px; justify-self: start; }
+    }
+  `;
+  document.head.appendChild(heroStyle);
 
   // -------------------------------------------------------------
   // Segmented tabs
