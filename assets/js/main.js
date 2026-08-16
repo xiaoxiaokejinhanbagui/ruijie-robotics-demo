@@ -1,5 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
   // -------------------------------------------------------------
+  // Academic profile header
+  // -------------------------------------------------------------
+  document.title = "Ruijie Yin";
+
+  const chineseName = document.querySelector(".cn-name");
+  chineseName?.remove();
+
+  const intro = document.querySelector(".bio");
+  intro?.remove();
+
+  const role = document.querySelector(".role");
+  if (role) {
+    role.innerHTML = `
+      <span>M.Sc. Student in Computer Control &amp; Automation, Nanyang Technological University</span>
+      <span>Advisor: Prof. Rong Su</span>
+      <span>B.Eng. in Automation, Sichuan University</span>
+    `;
+    role.style.display = "grid";
+    role.style.gap = "5px";
+    role.style.lineHeight = "1.5";
+    role.style.marginBottom = "22px";
+  }
+
+  const portrait = document.querySelector(".portrait-wrap img");
+  if (portrait) {
+    portrait.src = "assets/images/profile-current.jpg";
+    portrait.alt = "Portrait of Ruijie Yin";
+  }
+
+  document.querySelectorAll(".edu-item").forEach((item) => {
+    const heading = item.querySelector("h3");
+    if (heading?.textContent?.trim() === "Nanyang Technological University" && !item.querySelector(".advisor-line")) {
+      const advisor = document.createElement("p");
+      advisor.className = "advisor-line";
+      advisor.textContent = "Advisor: Prof. Rong Su";
+      const degree = item.querySelector("p");
+      if (degree) degree.insertAdjacentElement("afterend", advisor);
+      else item.appendChild(advisor);
+    }
+  });
+
+  // -------------------------------------------------------------
   // Segmented tabs
   // -------------------------------------------------------------
   document.querySelectorAll("[data-tab-group]").forEach((group) => {
@@ -40,12 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
     video.addEventListener("loadeddata", showVideo);
     video.addEventListener("error", showFallback);
 
-    // If the browser already knows loading failed, show fallback.
     if (video.error) {
       showFallback();
     }
 
-    // A short timeout avoids blank cards when no source exists.
     window.setTimeout(() => {
       if (video.readyState === 0) {
         showFallback();
