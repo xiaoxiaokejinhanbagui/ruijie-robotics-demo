@@ -64,11 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // -------------------------------------------------------------
-  // Gracefully show placeholders when video files have not been
-  // added yet. Once you place a valid MP4 at the referenced path,
-  // the video appears automatically.
+  // Native video controls
+  // Users can play/pause, drag the timeline, change volume,
+  // and use the browser's standard video controls.
   // -------------------------------------------------------------
   document.querySelectorAll(".video-shell video").forEach((video) => {
+    video.controls = true;
+    video.preload = "metadata";
+    video.setAttribute("controls", "");
+
     const shell = video.closest(".video-shell");
 
     const showFallback = () => {
@@ -119,16 +123,37 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // -------------------------------------------------------------
-  // Pause off-screen videos to reduce CPU/GPU usage.
+  // Pause off-screen videos to reduce CPU/GPU usage while
+  // preserving manual pause/play choices made by the visitor.
   // -------------------------------------------------------------
   if ("IntersectionObserver" in window) {
+    const autoPausing = new WeakSet();
+
+    document.querySelectorAll("video").forEach((video) => {
+      video.addEventListener("pause", () => {
+        if (autoPausing.has(video)) {
+          autoPausing.delete(video);
+          return;
+        }
+        video.dataset.userPaused = "true";
+      });
+
+      video.addEventListener("play", () => {
+        delete video.dataset.userPaused;
+      });
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
+
           if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
+            if (video.dataset.userPaused !== "true") {
+              video.play().catch(() => {});
+            }
+          } else if (!video.paused) {
+            autoPausing.add(video);
             video.pause();
           }
         });
