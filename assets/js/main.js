@@ -13,14 +13,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const role = document.querySelector(".role");
   if (role) {
     role.innerHTML = `
-      <span>M.Sc. Student in Computer Control &amp; Automation, Nanyang Technological University</span>
+      <span><strong>Nanyang Technological University</strong> · M.Sc. in Computer Control &amp; Automation</span>
       <span>Advisor: Prof. Rong Su</span>
-      <span>B.Eng. in Automation, Sichuan University</span>
+      <span><strong>Sichuan University</strong> · B.Eng. in Automation</span>
     `;
     role.style.display = "grid";
-    role.style.gap = "3px";
-    role.style.lineHeight = "1.4";
-    role.style.marginBottom = "16px";
+    role.style.gap = "4px";
+    role.style.lineHeight = "1.45";
+    role.style.marginBottom = "0";
+
+    if (!document.querySelector(".hero-focus")) {
+      const focus = document.createElement("div");
+      focus.className = "hero-focus";
+      focus.innerHTML = `
+        <span class="hero-focus-label">Research Focus</span>
+        <span class="hero-focus-text">Reinforcement Learning Algorithms · Neural Policy Architecture &amp; Optimization · Whole-Body Robot Control</span>
+      `;
+      role.insertAdjacentElement("afterend", focus);
+    }
   }
 
   const portrait = document.querySelector(".portrait-wrap img");
@@ -41,34 +51,72 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Keep the opening section compact and visually balanced with the portrait.
+  // Keep the opening section compact and balanced with the portrait.
   const heroStyle = document.createElement("style");
   heroStyle.textContent = `
-    .hero { padding: 40px 0 30px; }
+    .hero { padding: 34px 0 28px; }
     .hero-grid {
-      grid-template-columns: minmax(0, 1fr) 250px;
-      gap: 46px;
+      grid-template-columns: minmax(0, 1fr) 238px;
+      gap: 44px;
       align-items: center;
     }
+    .hero-copy { max-width: 760px; }
     .hero-copy h1 {
-      font-size: clamp(2.7rem, 5vw, 4rem);
-      line-height: .96;
+      font-size: clamp(2.8rem, 5vw, 3.9rem);
+      line-height: .98;
+      letter-spacing: -.05em;
     }
-    .role { font-size: .96rem; }
-    .hero-rule { width: 36px; margin: 13px 0; }
-    .profile-links { margin-top: 15px; }
+    .role {
+      margin-top: 13px !important;
+      color: #c5cbd2;
+      font-size: .94rem;
+    }
+    .role strong {
+      color: #eef1f4;
+      font-weight: 650;
+    }
+    .hero-focus {
+      display: grid;
+      gap: 4px;
+      margin-top: 17px;
+      padding-left: 13px;
+      border-left: 2px solid #3f8fe8;
+      max-width: 700px;
+    }
+    .hero-focus-label {
+      color: #66a9ff;
+      font-size: .68rem;
+      font-weight: 780;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .hero-focus-text {
+      color: #aeb6c0;
+      font-size: .88rem;
+      line-height: 1.52;
+    }
+    .hero-rule {
+      width: 36px;
+      height: 2px;
+      margin: 17px 0 15px;
+    }
+    .profile-links { margin-top: 0; gap: 20px; }
+    .profile-links a { font-size: .91rem; }
     .portrait-wrap {
-      width: 250px;
+      width: 238px;
       justify-self: end;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
     }
     @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: minmax(0, 1fr) 210px; gap: 34px; }
-      .portrait-wrap { width: 210px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 205px; gap: 32px; }
+      .portrait-wrap { width: 205px; }
+      .hero-focus-text { font-size: .84rem; }
     }
     @media (max-width: 720px) {
-      .hero { padding: 32px 0 26px; }
-      .hero-grid { grid-template-columns: 1fr; }
-      .portrait-wrap { width: 180px; justify-self: start; }
+      .hero { padding: 28px 0 24px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+      .portrait-wrap { width: 176px; justify-self: start; order: -1; }
+      .hero-copy h1 { font-size: 2.8rem; }
     }
   `;
   document.head.appendChild(heroStyle);
@@ -158,6 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".video-shell video").forEach((video) => {
     const shell = video.closest(".video-shell");
     if (!shell) return;
+
+    // Force a fresh request for the restored box-transfer asset so an old
+    // truncated response cannot remain in the browser/CDN cache.
+    const source = video.querySelector("source");
+    if (source && source.getAttribute("src")?.includes("box-transfer-simulation.mp4")) {
+      source.setAttribute("src", "assets/videos/gnn_symmetry/box-transfer-simulation.mp4?v=20260817-restored");
+      video.load();
+    }
 
     video.controls = false;
     video.removeAttribute("controls");
