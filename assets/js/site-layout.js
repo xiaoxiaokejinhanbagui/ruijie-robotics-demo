@@ -2,7 +2,7 @@ window.RY=window.RY||{};RY.setup=function(){
  document.title='Ruijie Yin'; document.documentElement.lang='zh-CN';
  document.querySelector('.cn-name')?.remove();document.querySelector('.bio')?.remove();document.querySelector('.hero-focus')?.remove();
  const portrait=document.querySelector('.portrait-wrap img');if(portrait){portrait.src='assets/images/profile-current.jpg';portrait.alt='Portrait of Ruijie Yin';}
- document.querySelectorAll('a[aria-label="CV"],.footer-links a').forEach(a=>{if(a.getAttribute('aria-label')==='CV'||a.textContent.trim()==='CV'){a.href='assets/cv/Ruijie_Yin_CV.pdf';a.target='_blank';a.rel='noopener';}});
+ document.querySelectorAll('a[aria-label="CV"],.footer-links a').forEach(a=>{if(a.getAttribute('aria-label')==='CV'||a.textContent.trim()==='CV'){a.href='assets/cv/Ruijie_Yin_CV_2027.html';a.target='_blank';a.rel='noopener';}});
  document.querySelectorAll('.footer-links a').forEach(a=>{/google scholar/i.test(a.textContent||'')&&a.remove();});
  document.querySelectorAll('.edu-item').forEach(item=>{const h=item.querySelector('h3');if(h?.textContent.trim()==='Nanyang Technological University'||h?.textContent.trim()==='南洋理工大学'){const d=item.querySelector('span');if(d)d.textContent='2025.08 – 2027.01';if(!item.querySelector('.advisor-line')){const p=document.createElement('p');p.className='advisor-line';item.querySelector('p')?.insertAdjacentElement('afterend',p);}}});
  const hi=document.querySelector('.header-inner');if(hi&&!document.querySelector('.language-switch')){const s=document.createElement('div');s.className='language-switch';s.innerHTML='<button type="button" data-lang="zh">中文</button><span>|</span><button type="button" data-lang="en">English</button>';hi.appendChild(s);}
