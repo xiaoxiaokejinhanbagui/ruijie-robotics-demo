@@ -51,6 +51,69 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // -------------------------------------------------------------
+  // Research project priority and naming
+  // Put the neural-policy / decoupled-control project first while
+  // keeping the public-facing description method-agnostic.
+  // -------------------------------------------------------------
+  const projectList = document.querySelector(".project-list");
+  if (projectList) {
+    const projectCards = Array.from(projectList.querySelectorAll(".project-card"));
+    const decoupledCard = projectCards.find((card) => {
+      const title = card.querySelector("h3")?.textContent || "";
+      return title.includes("Symmetry-Aware GNN") || title.includes("Neural Policy Optimization");
+    });
+
+    if (decoupledCard) {
+      projectList.insertBefore(decoupledCard, projectList.firstElementChild);
+
+      const title = decoupledCard.querySelector("h3");
+      if (title) title.textContent = "Neural Policy Optimization for Decoupled Whole-Body Control";
+
+      const description = decoupledCard.querySelector(".project-copy p");
+      if (description) {
+        description.textContent = "Neural-policy optimization combined with upper/lower-body decoupling for precise and robust humanoid whole-body control. Current demonstrations include coordinated box carrying, left/right turning, and loco-manipulation in simulation.";
+      }
+
+      const tags = decoupledCard.querySelector(".project-tags");
+      if (tags) {
+        tags.innerHTML = `
+          <span>Neural Policy Optimization</span>
+          <span>Decoupled Control</span>
+          <span>Whole-Body Control</span>
+          <span>Loco-Manipulation</span>
+        `;
+      }
+    }
+  }
+
+  const wholeBodyDetail = document.getElementById("whole-body-detail");
+  const decoupledDetail = document.getElementById("symmetry-detail");
+  if (wholeBodyDetail && decoupledDetail && wholeBodyDetail.parentElement === decoupledDetail.parentElement) {
+    wholeBodyDetail.parentElement.insertBefore(decoupledDetail, wholeBodyDetail);
+  }
+
+  if (decoupledDetail) {
+    const kicker = decoupledDetail.querySelector(".detail-kicker");
+    if (kicker) kicker.textContent = "PROJECT 01";
+
+    const heading = decoupledDetail.querySelector(".detail-heading h2");
+    if (heading) heading.textContent = "Neural Policy Optimization & Upper/Lower-Body Decoupled Control";
+
+    const summary = decoupledDetail.querySelector(".detail-heading p");
+    if (summary) {
+      summary.textContent = "Simulation demonstrations of coordinated manipulation, turning behavior, and whole-body control under an upper/lower-body decoupled framework.";
+    }
+
+    const demoHeaders = decoupledDetail.querySelectorAll(".demo-header h3");
+    if (demoHeaders[1]) demoHeaders[1].textContent = "Left / Right Turning During Box Carrying";
+  }
+
+  if (wholeBodyDetail) {
+    const kicker = wholeBodyDetail.querySelector(".detail-kicker");
+    if (kicker) kicker.textContent = "PROJECT 02";
+  }
+
   // Keep the opening section compact and balanced with the portrait.
   const heroStyle = document.createElement("style");
   heroStyle.textContent = `
