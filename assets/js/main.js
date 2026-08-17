@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // CV links open the uploaded PDF in a new browser tab.
   document.querySelectorAll('a[aria-label="CV"], .footer-links a').forEach((link) => {
     if (link.getAttribute("aria-label") === "CV" || link.textContent.trim() === "CV") {
       link.href = "assets/cv/Ruijie_Yin_CV.pdf";
@@ -109,9 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(heroStyle);
 
-  // -------------------------------------------------------------
-  // Research project priority and method-agnostic naming
-  // -------------------------------------------------------------
   const projectList = document.querySelector(".project-list");
   if (projectList) {
     const cards = Array.from(projectList.querySelectorAll(".project-card"));
@@ -146,8 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (orderedCards[0]) {
       const img = orderedCards[0].querySelector(".project-media img");
       if (img) {
-        img.src = "assets/images/posters/box_transfer_sim.jpg?v=20260817-cover";
-        img.alt = "Humanoid robot carrying a box in simulation";
+        img.src = "assets/images/posters/box-transfer-project-real.jpg?v=20260817-hardware";
+        img.alt = "Real robot holding a box in the hardware environment";
       }
     }
 
@@ -180,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     wholeBodyDetail.parentElement.insertBefore(decoupledDetail, wholeBodyDetail);
   }
 
-  // Project 01: decoupled whole-body control + box carrying.
   if (decoupledDetail) {
     const kicker = decoupledDetail.querySelector(".detail-kicker");
     if (kicker) kicker.textContent = "PROJECT 01";
@@ -196,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const demoHeaders = decoupledDetail.querySelectorAll(".demo-header h3");
     if (demoHeaders[1]) demoHeaders[1].textContent = "Left / Right Turning During Box Carrying";
 
-    // Add real-robot box carrying directly after the simulation box-transfer block.
     const firstDemo = decoupledDetail.querySelector(".demo-block");
     if (firstDemo && !decoupledDetail.querySelector(".box-hardware-demo")) {
       const hardwareBlock = document.createElement("div");
@@ -204,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hardwareBlock.innerHTML = `
         <div class="demo-header">
           <div><span class="demo-index">02</span><h3>Real-Robot Box Transfer</h3></div>
-          <p>Real-robot deployment of the box-carrying whole-body task on Unitree G1.</p>
+          <p>Real robot · Heavy payload disturbance due to the external computer</p>
         </div>
         <article class="video-card feature-video">
           <div class="video-shell feature-shell">
@@ -217,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       firstDemo.insertAdjacentElement("afterend", hardwareBlock);
 
-      // Re-number the existing later demonstrations after inserting hardware deployment.
       const demos = decoupledDetail.querySelectorAll(".demo-block");
       demos.forEach((demo, index) => {
         const number = demo.querySelector(".demo-index");
@@ -226,7 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Project 02: multi-skill control + vision-guided grasping.
   if (wholeBodyDetail) {
     const kicker = wholeBodyDetail.querySelector(".detail-kicker");
     if (kicker) kicker.textContent = "PROJECT 02";
@@ -239,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
       graspBlock.className = "demo-block vision-grasp-demo";
       graspBlock.innerHTML = `
         <div class="demo-header">
-          <div><span class="demo-index">03</span><h3>Vision-Guided Bottle Grasping</h3></div>
+          <div><span class="demo-index">01</span><h3>Vision-Guided Bottle Grasping</h3></div>
           <p>Vision-guided target localization coupled with the single-arm reaching policy for real-robot object grasping.</p>
         </div>
         <article class="video-card feature-video">
@@ -251,13 +243,18 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="video-label-block"><strong>Real Robot</strong><span>Vision-guided bottle grasping</span></div>
         </article>
       `;
-      wholeBodyDetail.querySelector(".container")?.appendChild(graspBlock);
+      const headingBlock = wholeBodyDetail.querySelector(".detail-heading");
+      if (headingBlock) headingBlock.insertAdjacentElement("afterend", graspBlock);
+      else wholeBodyDetail.querySelector(".container")?.prepend(graspBlock);
     }
+
+    const bodyDemos = wholeBodyDetail.querySelectorAll(".demo-block");
+    bodyDemos.forEach((demo, index) => {
+      const number = demo.querySelector(".demo-index");
+      if (number) number.textContent = String(index + 1).padStart(2, "0");
+    });
   }
 
-  // -------------------------------------------------------------
-  // Remove outdated Ongoing Work and replace with one future direction.
-  // -------------------------------------------------------------
   const oldOngoing = document.getElementById("ongoing");
   if (oldOngoing) {
     const future = document.createElement("section");
@@ -278,9 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
     oldOngoing.replaceWith(future);
   }
 
-  // -------------------------------------------------------------
-  // Always-visible custom controls for all detailed demo videos.
-  // -------------------------------------------------------------
   const controlStyle = document.createElement("style");
   controlStyle.textContent = `
     .custom-video-controls {
