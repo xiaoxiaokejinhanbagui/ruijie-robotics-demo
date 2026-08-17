@@ -1,1 +1,0 @@
-Box transfer video restored from the repository's previous valid Git blob after the truncated file was detected.
