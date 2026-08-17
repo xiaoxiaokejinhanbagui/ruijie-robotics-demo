@@ -1,14 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // -------------------------------------------------------------
-  // Academic profile header
-  // -------------------------------------------------------------
   document.title = "Ruijie Yin";
 
-  const chineseName = document.querySelector(".cn-name");
-  chineseName?.remove();
-
-  const intro = document.querySelector(".bio");
-  intro?.remove();
+  // -------------------------------------------------------------
+  // Academic profile header: keep only name, education and advisor.
+  // -------------------------------------------------------------
+  document.querySelector(".cn-name")?.remove();
+  document.querySelector(".bio")?.remove();
+  document.querySelector(".hero-focus")?.remove();
 
   const role = document.querySelector(".role");
   if (role) {
@@ -18,19 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <span><strong>Sichuan University</strong> · B.Eng. in Automation</span>
     `;
     role.style.display = "grid";
-    role.style.gap = "4px";
-    role.style.lineHeight = "1.45";
+    role.style.gap = "10px";
+    role.style.lineHeight = "1.65";
     role.style.marginBottom = "0";
-
-    if (!document.querySelector(".hero-focus")) {
-      const focus = document.createElement("div");
-      focus.className = "hero-focus";
-      focus.innerHTML = `
-        <span class="hero-focus-label">Research Focus</span>
-        <span class="hero-focus-text">Reinforcement Learning Algorithms · Neural Policy Architecture &amp; Optimization · Whole-Body Robot Control</span>
-      `;
-      role.insertAdjacentElement("afterend", focus);
-    }
   }
 
   const portrait = document.querySelector(".portrait-wrap img");
@@ -51,15 +39,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  const heroStyle = document.createElement("style");
+  heroStyle.textContent = `
+    .hero { padding: 44px 0 38px; }
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 54px;
+      align-items: center;
+    }
+    .hero-copy { max-width: 850px; }
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(3.2rem, 6vw, 5rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+    .role {
+      margin-top: 24px !important;
+      color: #d0d6dd;
+      font-size: 1.06rem;
+    }
+    .role strong {
+      color: #f3f5f7;
+      font-weight: 700;
+    }
+    .hero-rule {
+      width: 60px;
+      height: 2px;
+      margin: 30px 0 25px;
+    }
+    .profile-links {
+      margin-top: 0;
+      gap: 28px;
+      align-items: center;
+    }
+    .profile-links a { font-size: 1rem; }
+    .portrait-wrap {
+      width: 250px;
+      justify-self: end;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .project-media > video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 192px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 214px; gap: 34px; }
+      .portrait-wrap { width: 214px; }
+      .role { font-size: 1rem; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 32px 0 28px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 25px; }
+      .portrait-wrap { width: 182px; justify-self: start; order: -1; }
+      .hero-copy h1 { font-size: 2.95rem; }
+      .role { gap: 8px !important; }
+      .hero-rule { margin: 24px 0 22px; }
+    }
+  `;
+  document.head.appendChild(heroStyle);
+
   // -------------------------------------------------------------
-  // Research project priority and naming
-  // Put the neural-policy / decoupled-control project first while
-  // keeping the public-facing description method-agnostic.
+  // Research project priority and method-agnostic naming.
   // -------------------------------------------------------------
   const projectList = document.querySelector(".project-list");
   if (projectList) {
-    const projectCards = Array.from(projectList.querySelectorAll(".project-card"));
-    const decoupledCard = projectCards.find((card) => {
+    const cards = Array.from(projectList.querySelectorAll(".project-card"));
+    const decoupledCard = cards.find((card) => {
       const title = card.querySelector("h3")?.textContent || "";
       return title.includes("Symmetry-Aware GNN") || title.includes("Neural Policy Optimization");
     });
@@ -83,6 +133,39 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>Whole-Body Control</span>
           <span>Loco-Manipulation</span>
         `;
+      }
+    }
+
+    // Project 01: use the box-transfer scene rather than the trajectory view.
+    const orderedCards = projectList.querySelectorAll(".project-card");
+    if (orderedCards[0]) {
+      const img = orderedCards[0].querySelector(".project-media img");
+      if (img) {
+        img.src = "assets/images/posters/box_transfer_sim.jpg?v=20260817-cover";
+        img.alt = "Humanoid robot carrying a box in simulation";
+      }
+    }
+
+    // Project 02: show a deeper squatting frame directly from the policy-switching demo.
+    if (orderedCards[1]) {
+      const media = orderedCards[1].querySelector(".project-media");
+      if (media) {
+        const oldImg = media.querySelector("img");
+        if (oldImg) {
+          const thumbVideo = document.createElement("video");
+          thumbVideo.muted = true;
+          thumbVideo.playsInline = true;
+          thumbVideo.preload = "metadata";
+          thumbVideo.poster = "assets/images/posters/skill_switch_sim.jpg";
+          thumbVideo.setAttribute("aria-label", "Humanoid robot squatting during whole-body control");
+          thumbVideo.src = "assets/videos/whole_body/skill-switch-simulation.mp4#t=5.2";
+          thumbVideo.addEventListener("loadedmetadata", () => {
+            const target = Math.min(5.2, Math.max(0, (thumbVideo.duration || 5.2) - 0.05));
+            try { thumbVideo.currentTime = target; } catch (_) {}
+          }, { once: true });
+          thumbVideo.addEventListener("seeked", () => thumbVideo.pause(), { once: true });
+          oldImg.replaceWith(thumbVideo);
+        }
       }
     }
   }
@@ -114,83 +197,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (kicker) kicker.textContent = "PROJECT 02";
   }
 
-  // Keep the opening section compact and balanced with the portrait.
-  const heroStyle = document.createElement("style");
-  heroStyle.textContent = `
-    .hero { padding: 34px 0 28px; }
-    .hero-grid {
-      grid-template-columns: minmax(0, 1fr) 238px;
-      gap: 44px;
-      align-items: center;
-    }
-    .hero-copy { max-width: 760px; }
-    .hero-copy h1 {
-      font-size: clamp(2.8rem, 5vw, 3.9rem);
-      line-height: .98;
-      letter-spacing: -.05em;
-    }
-    .role {
-      margin-top: 13px !important;
-      color: #c5cbd2;
-      font-size: .94rem;
-    }
-    .role strong {
-      color: #eef1f4;
-      font-weight: 650;
-    }
-    .hero-focus {
-      display: grid;
-      gap: 4px;
-      margin-top: 17px;
-      padding-left: 13px;
-      border-left: 2px solid #3f8fe8;
-      max-width: 700px;
-    }
-    .hero-focus-label {
-      color: #66a9ff;
-      font-size: .68rem;
-      font-weight: 780;
-      letter-spacing: .11em;
-      text-transform: uppercase;
-    }
-    .hero-focus-text {
-      color: #aeb6c0;
-      font-size: .88rem;
-      line-height: 1.52;
-    }
-    .hero-rule {
-      width: 36px;
-      height: 2px;
-      margin: 17px 0 15px;
-    }
-    .profile-links { margin-top: 0; gap: 20px; }
-    .profile-links a { font-size: .91rem; }
-    .portrait-wrap {
-      width: 238px;
-      justify-self: end;
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);
-    }
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: minmax(0, 1fr) 205px; gap: 32px; }
-      .portrait-wrap { width: 205px; }
-      .hero-focus-text { font-size: .84rem; }
-    }
-    @media (max-width: 720px) {
-      .hero { padding: 28px 0 24px; }
-      .hero-grid { grid-template-columns: 1fr; gap: 24px; }
-      .portrait-wrap { width: 176px; justify-self: start; order: -1; }
-      .hero-copy h1 { font-size: 2.8rem; }
-    }
-  `;
-  document.head.appendChild(heroStyle);
-
   // -------------------------------------------------------------
-  // Segmented tabs
+  // Segmented tabs.
   // -------------------------------------------------------------
   document.querySelectorAll("[data-tab-group]").forEach((group) => {
     const groupName = group.dataset.tabGroup;
     const buttons = group.querySelectorAll("[data-tab]");
-
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         const target = button.dataset.tab;
@@ -203,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // -------------------------------------------------------------
-  // Always-visible custom video controls
+  // Always-visible custom controls for detailed demo videos.
   // -------------------------------------------------------------
   const controlStyle = document.createElement("style");
   controlStyle.textContent = `
@@ -234,26 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
       cursor: pointer;
       font: inherit;
     }
-    .custom-video-controls button:hover {
-      border-color: #66a9ff;
-      color: #66a9ff;
-    }
-    .custom-video-controls input[type="range"] {
-      width: 100%;
-      min-width: 0;
-      accent-color: #66a9ff;
-      cursor: pointer;
-    }
-    .custom-video-time {
-      min-width: 86px;
-      text-align: right;
-      color: #c7ced7;
-      font-variant-numeric: tabular-nums;
-    }
+    .custom-video-controls button:hover { border-color: #66a9ff; color: #66a9ff; }
+    .custom-video-controls input[type="range"] { width: 100%; min-width: 0; accent-color: #66a9ff; cursor: pointer; }
+    .custom-video-time { min-width: 86px; text-align: right; color: #c7ced7; font-variant-numeric: tabular-nums; }
     @media (max-width: 560px) {
-      .custom-video-controls {
-        grid-template-columns: auto minmax(0, 1fr);
-      }
+      .custom-video-controls { grid-template-columns: auto minmax(0, 1fr); }
       .custom-video-time { display: none; }
     }
   `;
@@ -270,8 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const shell = video.closest(".video-shell");
     if (!shell) return;
 
-    // Force a fresh request for the restored box-transfer asset so an old
-    // truncated response cannot remain in the browser/CDN cache.
     const source = video.querySelector("source");
     if (source && source.getAttribute("src")?.includes("box-transfer-simulation.mp4")) {
       source.setAttribute("src", "assets/videos/gnn_symmetry/box-transfer-simulation.mp4?v=20260817-restored");
@@ -296,15 +291,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const time = controls.querySelector(".custom-video-time");
     let seeking = false;
 
-    const updateButton = () => {
-      playButton.textContent = video.paused ? "Play" : "Pause";
-    };
-
+    const updateButton = () => { playButton.textContent = video.paused ? "Play" : "Pause"; };
     const updateTime = () => {
       const duration = Number.isFinite(video.duration) ? video.duration : 0;
-      if (!seeking && duration > 0) {
-        seek.value = String(Math.round((video.currentTime / duration) * 1000));
-      }
+      if (!seeking && duration > 0) seek.value = String(Math.round((video.currentTime / duration) * 1000));
       time.textContent = `${formatTime(video.currentTime)} / ${formatTime(duration)}`;
     };
 
@@ -312,7 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (video.paused) video.play().catch(() => {});
       else video.pause();
     });
-
     seek.addEventListener("pointerdown", () => { seeking = true; });
     seek.addEventListener("pointerup", () => { seeking = false; });
     seek.addEventListener("input", () => {
@@ -326,56 +315,21 @@ document.addEventListener("DOMContentLoaded", () => {
     video.addEventListener("loadedmetadata", updateTime);
     video.addEventListener("durationchange", updateTime);
     video.addEventListener("timeupdate", updateTime);
-
-    const showFallback = () => shell.classList.add("video-missing");
-    const showVideo = () => shell.classList.remove("video-missing");
-    video.addEventListener("loadeddata", showVideo);
-    video.addEventListener("error", showFallback);
-    if (video.error) showFallback();
+    video.addEventListener("loadeddata", () => shell.classList.remove("video-missing"));
+    video.addEventListener("error", () => shell.classList.add("video-missing"));
 
     updateButton();
     updateTime();
   });
 
-  // -------------------------------------------------------------
-  // Copy BibTeX
-  // -------------------------------------------------------------
-  document.querySelectorAll("[data-copy-target]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const targetId = button.dataset.copyTarget;
-      const target = document.getElementById(targetId);
-      if (!target) return;
-
-      const text = target.innerText.trim();
-      const original = button.textContent;
-
-      try {
-        await navigator.clipboard.writeText(text);
-        button.textContent = "Copied";
-      } catch {
-        button.textContent = "Copy failed";
-      }
-
-      window.setTimeout(() => {
-        button.textContent = original;
-      }, 1400);
-    });
-  });
-
-  // -------------------------------------------------------------
-  // Pause off-screen videos only; do not force replay when they
-  // come back into view, so the visitor keeps control.
-  // -------------------------------------------------------------
+  // Pause videos that leave the viewport; do not force replay on return.
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
-          if (!entry.isIntersecting && !video.paused) video.pause();
-        });
-      },
-      { threshold: 0.05 }
-    );
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (!entry.isIntersecting && !video.paused) video.pause();
+      });
+    }, { threshold: 0.05 });
     document.querySelectorAll("video").forEach((video) => observer.observe(video));
   }
 });
