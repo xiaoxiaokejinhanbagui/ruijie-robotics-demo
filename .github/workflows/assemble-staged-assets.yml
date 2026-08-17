@@ -1,0 +1,38 @@
+name: Assemble staged site assets
+
+on:
+  push:
+    branches: [asset-staging-20260817]
+    paths: ['.asset-staging/READY']
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: asset-staging-20260817
+          fetch-depth: 0
+      - name: Decode staged assets
+        shell: bash
+        run: |
+          mkdir -p /tmp/site-assets
+          cat .asset-staging/cv_*.txt | base64 -d > /tmp/site-assets/Ruijie_Yin_CV.pdf
+          cat .asset-staging/v3_*.txt | base64 -d > /tmp/site-assets/box-turn-symmetry.mp4
+          cat .asset-staging/v4_*.txt | base64 -d > /tmp/site-assets/turning-symmetry.mp4
+      - name: Commit assets to main
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+          cp /tmp/site-assets/Ruijie_Yin_CV.pdf assets/cv/Ruijie_Yin_CV.pdf
+          cp /tmp/site-assets/box-turn-symmetry.mp4 assets/videos/gnn_symmetry/box-turn-symmetry.mp4
+          cp /tmp/site-assets/turning-symmetry.mp4 assets/videos/gnn_symmetry/turning-symmetry.mp4
+          git add assets/cv/Ruijie_Yin_CV.pdf assets/videos/gnn_symmetry/box-turn-symmetry.mp4 assets/videos/gnn_symmetry/turning-symmetry.mp4
+          git commit -m "Update CV and symmetry demonstration videos"
+          git push origin main
