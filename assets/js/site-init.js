@@ -1,0 +1,1 @@
+(function(){function init(){RY.setup();RY.setupVideos();document.querySelectorAll('.language-switch button').forEach(b=>b.addEventListener('click',()=>RY.applyLanguage(b.dataset.lang)));RY.applyLanguage('zh');}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();})();
