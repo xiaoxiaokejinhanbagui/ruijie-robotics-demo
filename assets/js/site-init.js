@@ -30,7 +30,7 @@
     const s=document.createElement('section');
     s.className='section detail-section';
     s.id='human-collaboration-detail';
-    s.innerHTML='<div class="container"><div class="detail-heading"><span class="detail-kicker">新增工作</span><h2>人机协作任务执行</h2><p>面向人机协作搬运场景，展示人形机器人在真实环境中与人协同完成箱体搬运与任务执行。</p></div><div class="demo-block human-collaboration-demo"><div class="demo-header"><div><span class="demo-index">01</span><h3>人机协作搬箱</h3></div><p>真机 · 人机协同箱体搬运任务</p></div><article class="video-card feature-video"><div class="video-shell feature-shell"><video class="human-collaboration-video" autoplay muted loop playsinline preload="metadata"><source src="assets/videos/human_collaboration/human-collaboration-task.mp4?v=20260905-fix" type="video/mp4"></video></div><div class="video-label-block"><strong>真机实验</strong><span>人机协作任务执行</span></div></article></div></div>';
+    s.innerHTML='<div class="container"><div class="detail-heading"><span class="detail-kicker">新增工作</span><h2>人机协作任务执行</h2><p>面向人机协作搬运场景，展示人形机器人在真实环境中与人协同完成箱体搬运与任务执行。</p></div><div class="demo-block human-collaboration-demo"><div class="demo-header"><div><span class="demo-index">01</span><h3>人机协作搬箱</h3></div><p>真机 · 人机协同箱体搬运任务</p></div><article class="video-card feature-video"><div class="video-shell feature-shell"><video class="human-collaboration-video" autoplay muted loop playsinline preload="metadata"><source src="assets/videos/human_collaboration/human-collaboration-task.mp4?v=20260905-original-v2" type="video/mp4"></video></div><div class="video-label-block"><strong>真机实验</strong><span>人机协作任务执行</span></div></article></div></div>';
     wb.parentElement.insertBefore(s,wb);
   }
   function setHumanCollaborationLabels(lang){
