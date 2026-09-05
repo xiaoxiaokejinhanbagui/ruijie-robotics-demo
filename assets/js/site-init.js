@@ -30,7 +30,7 @@
     const s=document.createElement('section');
     s.className='section detail-section';
     s.id='human-collaboration-detail';
-    s.innerHTML='<div class="container"><div class="detail-heading"><span class="detail-kicker">新增工作</span><h2>人机协作任务执行</h2><p>面向人机协作搬运场景，展示人形机器人在真实环境中与人协同完成箱体搬运与任务执行。</p></div><div class="demo-block human-collaboration-demo"><div class="demo-header"><div><span class="demo-index">01</span><h3>人机协作搬箱</h3></div><p>真机 · 人机协同箱体搬运任务</p></div><article class="video-card feature-video"><div class="video-shell feature-shell"><video class="human-collaboration-video" autoplay muted loop playsinline preload="metadata"></video></div><div class="video-label-block"><strong>真机实验</strong><span>人机协作任务执行</span></div></article></div></div>';
+    s.innerHTML='<div class="container"><div class="detail-heading"><span class="detail-kicker">新增工作</span><h2>人机协作任务执行</h2><p>面向人机协作搬运场景，展示人形机器人在真实环境中与人协同完成箱体搬运与任务执行。</p></div><div class="demo-block human-collaboration-demo"><div class="demo-header"><div><span class="demo-index">01</span><h3>人机协作搬箱</h3></div><p>真机 · 人机协同箱体搬运任务</p></div><article class="video-card feature-video"><div class="video-shell feature-shell"><video class="human-collaboration-video" autoplay muted loop playsinline preload="metadata"><source src="assets/videos/human_collaboration/human-collaboration-task.mp4?v=20260905-fix" type="video/mp4"></video></div><div class="video-label-block"><strong>真机实验</strong><span>人机协作任务执行</span></div></article></div></div>';
     wb.parentElement.insertBefore(s,wb);
   }
   function setHumanCollaborationLabels(lang){
@@ -45,21 +45,6 @@
     q('.demo-header p').textContent=zh?'真机 · 人机协同箱体搬运任务':'Real robot · Collaborative box-carrying task';
     q('.video-label-block strong').textContent=zh?'真机实验':'Real Robot';
     q('.video-label-block span').textContent=zh?'人机协作任务执行':'Human–robot collaborative task execution';
-  }
-  async function loadHumanCollaborationVideo(){
-    const v=document.querySelector('.human-collaboration-video');
-    if(!v||v.dataset.loaded==='1')return;
-    v.dataset.loaded='1';
-    const files=['assets/videos/human_collaboration/embedded/human-collaboration-task-00.b64','assets/videos/human_collaboration/embedded/human-collaboration-task-01.b64'];
-    try{
-      const parts=await Promise.all(files.map(x=>fetch(x).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})));
-      const s=parts.join('').replace(/\s+/g,'');
-      const raw=atob(s), bytes=new Uint8Array(raw.length);
-      for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
-      v.src=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
-      v.load();
-      v.play().catch(()=>{});
-    }catch(e){console.error('Failed to load human collaboration video',e);}
   }
   function init(){
     RY.setup();
@@ -76,7 +61,6 @@
     buildComparison(demos[2],'assets/videos/gnn_symmetry/turning-symmetry.mp4?v=20260818-gnn','assets/videos/gnn_symmetry/left-right-turn-ood.mp4?v=20260818-mlp');
     buildComparison(demos[3],'assets/videos/gnn_symmetry/box-turn-symmetry.mp4?v=20260818-gnn','assets/videos/gnn_symmetry/turn-in-place-symmetry.mp4?v=20260818-mlp');
     RY.setupVideos();
-    loadHumanCollaborationVideo();
     const apply=(lang)=>{RY.applyLanguage(lang);setComparisonLabels(lang);setHumanCollaborationLabels(lang);};
     document.querySelectorAll('.language-switch button').forEach(b=>b.addEventListener('click',()=>apply(b.dataset.lang)));
     apply('zh');
